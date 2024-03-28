@@ -21,24 +21,24 @@ function buildbody(){
     i = 0;
     while(i < 7){
         // create elements
-        col = constructelement("div", "content", "generated-col-" + days[i].toLowerCase());
-        head = constructelement("div", "content-header");
-        type = constructp(days[i]);
-        content = constructelement("div", "content-container", "content-" + days[i].toLowerCase());
-        btn = constructelement("div", "add-new-btn", "add-" + days[i].toLowerCase())
-        cal = constructelement("i", "fa-regular fa-calendar-plus")
-        p = constructp("Add New")
+        columncontainer = constructelement("div", "content", "generated-col-" + days[i].toLowerCase());
+        headercontainer = constructelement("div", "content-header");
+        headertext = constructp(days[i]);
+        assignmentcontainer = constructelement("div", "content-container", "content-" + days[i].toLowerCase());
+        addbutton = constructelement("div", "add-new-btn", "add-" + days[i].toLowerCase())
+        buttonicon = constructelement("i", "fa-regular fa-calendar-plus")
+        buttontext = constructp("Add New")
         // build header
-        head.appendChild(type);
+        headercontainer.appendChild(headertext);
         // build button
-        btn.appendChild(cal)
-        btn.appendChild(p)
-        // build column
-        col.appendChild(head);
-        col.appendChild(content);
-        col.appendChild(btn);
+        addbutton.appendChild(buttonicon)
+        addbutton.appendChild(buttontext)
+        // build columncontainerumn
+        columncontainer.appendChild(headercontainer);
+        columncontainer.appendChild(assignmentcontainer);
+        columncontainer.appendChild(addbutton);
         // send to container
-        extcontentbox.appendChild(col);
+        extcontentbox.appendChild(columncontainer);
         // iterate
         i++;
     }
