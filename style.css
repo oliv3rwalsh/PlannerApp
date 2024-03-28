@@ -67,3 +67,18 @@ p{
 .class-name{
     font-variation-settings: "wght" 700;
 }
+.add-new-btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: mae-variable, sans-serif; 
+    font-variation-settings: "wght" 400;
+    font-size: 15px;
+}
+.fa-regular{
+    margin-right: 10px;
+    margin-bottom: 5px;
+}
+.content-container{
+    height: 76%;
+}
