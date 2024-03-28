@@ -1,7 +1,15 @@
-// <!-- <div class="add-new-btn">
-// <i class="fa-regular fa-calendar-plus"></i>
-// <p>Add New</p>
-// </div> -->
+function constructelement(type, className, id=""){
+    var n = document.createElement(type);
+    n.className = className;
+    n.id = id;
+    return(n);
+}
+
+function constructp(text, className="", id=""){
+    n = constructelement("p", className, id);
+    n.innerHTML = text;
+    return(n);
+}
 
 function buildbody(){
     var extcontentbox = document.querySelector("#content-box");
@@ -13,34 +21,18 @@ function buildbody(){
     i = 0;
     while(i < 7){
         // create elements
-
-        // column
-        var col = document.createElement("div");
-        col.className = "content";
-        col.id = "generated-col-" + days[i].toLowerCase();
-
-        // header
-        var head = document.createElement("div");
-        head.className = "content-header";
-        var type = document.createElement("p");
-        type.innerHTML = days[i];
+        col = constructelement("div", "content", "generated-col-" + days[i].toLowerCase());
+        head = constructelement("div", "content-header");
+        type = constructp(days[i]);
+        content = constructelement("div", "content-container", "content-" + days[i].toLowerCase());
+        btn = constructelement("div", "add-new-btn", "add-" + days[i].toLowerCase())
+        cal = constructelement("i", "fa-regular fa-calendar-plus")
+        p = constructp("Add New")
+        // build header
         head.appendChild(type);
-
-        var content = document.createElement("div");
-        content.id = "content-" + days[i].toLowerCase();
-        content.className = "content-container";
-
-        // button
-        var btn = document.createElement("div");
-        btn.className = "add-new-btn"
-        btn.id = "add-" + days[i].toLowerCase();
-        var cal = document.createElement("i");
-        cal.className = "fa-regular fa-calendar-plus";
-        var p = document.createElement("p");
-        p.innerHTML = "Add New"
+        // build button
         btn.appendChild(cal)
         btn.appendChild(p)
-
         // build column
         col.appendChild(head);
         col.appendChild(content);
@@ -54,14 +46,10 @@ function buildbody(){
 }
 
 function addassignment(c, d, dest, index=0){
-    var assn = document.createElement("div");
-    assn.className = "assignment";
-    var bdy = document.createElement("p");
-    bdy.innerHTML = "<span class =\"class-name\">" + c + "</span> " + d;
-    bdy.id = "generated-assignment-" + index;
+    assn = constructelement("div", "assignment")
+    bdy = constructp("<span class =\"class-name\">" + c + "</span> " + d, "", "generated-assignment-" + index)
     assn.appendChild(bdy);
     document.querySelector(dest).appendChild(assn);
-
 }
 
 function parse(t){
