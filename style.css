@@ -205,3 +205,9 @@ p{
     margin: 50px 0px;
     text-align: center;
 }
+.marginless{
+    margin: 0;
+}
+.spacer{
+    height: 50px;
+}

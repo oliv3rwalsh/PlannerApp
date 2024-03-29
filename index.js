@@ -5,6 +5,34 @@ var daterange = {
     start: new Date(),
     end: new Date()
 };
+const menutabicons = ["fa-solid fa-user", "fa-solid fa-link", "fa-solid fa-filter", "fa-solid fa-folder-closed", "fa-solid fa-floppy-disk", "fa-solid fa-door-open"];
+const menutabtitles = ["User Settings", "Data Sources", "Display Filters", "Local Data", "Save and Exit", "Sign Out"];
+const menutababbreviations = ["settings", "sources", "filters", "local", "exit", "esc"];
+
+function populatemenunav(){
+    i = 0;
+    var extcontentbox = document.querySelector("#nav-tab-container");
+    while(i < menutabicons.length){
+        container = constructelement("div", "navigation-button", menutababbreviations[i]+"-button");
+        iconcontainer = constructelement("div", "navigation-button-icon-container");
+        icon = constructelement("i", menutabicons[i] + " marginless")
+        textcontainer = constructelement("div", "navigation-button-text-container");
+        text = constructp(menutabtitles[i], "")
+
+        iconcontainer.appendChild(icon);
+        textcontainer.appendChild(text);
+        container.appendChild(iconcontainer);
+        container.appendChild(textcontainer);
+
+        if(i == menutabicons.length - 2){
+            spacer = constructelement("div", "spacer");
+            extcontentbox.appendChild(spacer);
+        }
+
+        extcontentbox.appendChild(container);
+        i++;
+    }
+}
 
 function generatedaterange(){
     const today = new Date();
@@ -183,7 +211,8 @@ function close(){
 window.onload=function(){
     generatedaterange();
     buildbody();
+    populatemenunav();
     document.querySelector("#menu").addEventListener("click", openmenu);
     document.querySelector("#today-button").addEventListener("click", reset);
-    document.querySelector("#close-button").addEventListener("click", close);
+    document.querySelector("#exit-button").addEventListener("click", close);
 }
