@@ -1,3 +1,29 @@
+assignments = []
+const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+var daterange = {
+    start: new Date(),
+    end: new Date()
+};
+
+function generatedaterange(){
+    const today = new Date();
+    // start
+    var sunday = new Date();
+    sunday.setHours(0);
+    sunday.setMinutes(0);
+    sunday.setSeconds(0);
+    sunday.setDate(sunday.getDate() - today.getDay());
+    daterange.start = sunday;
+    // end
+    var saturday = new Date(sunday);
+    saturday.setDate(saturday.getDate() + 6);
+    saturday.setHours(23);
+    saturday.setMinutes(59);
+    saturday.setSeconds(59);
+    daterange.end = saturday;
+}
+
 function constructelement(type, className, id=""){
     var n = document.createElement(type);
     n.className = className;
@@ -11,19 +37,59 @@ function constructp(text, className="", id=""){
     return(n);
 }
 
+function leftclicked(){
+    temp = new Date(daterange.start);
+    temp.setDate(temp.getDate() - 7);
+
+    temp2 = new Date(daterange.end);
+    temp2.setDate(temp2.getDate() - 7);
+    
+    daterange.start = temp;
+    daterange.end = temp2;
+
+    buildbody()
+}
+
+function rightclicked(){
+    temp = new Date(daterange.start);
+    temp.setDate(temp.getDate() + 7);
+
+    temp2 = new Date(daterange.end);
+    temp2.setDate(temp2.getDate() + 7);
+    
+    daterange.start = temp;
+    daterange.end = temp2;
+
+    buildbody()
+}
+
 function buildbody(){
     var extcontentbox = document.querySelector("#content-box");
     // clear
     while (extcontentbox.hasChildNodes()) {
         extcontentbox.removeChild(extcontentbox.lastChild);
     }
-    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    // create left arrow
+    lacontainer = constructelement("div", "arrow-container left");
+    laicon = constructelement("i", "fa-solid fa-chevron-left", "left-arrow")
+    laicon.addEventListener("click", leftclicked);
+    lacontainer.appendChild(laicon);
+    // create right arrow
+    racontainer = constructelement("div", "arrow-container right", "right-arrow");
+    raicon = constructelement("i", "fa-solid fa-chevron-right")
+    raicon.addEventListener("click", rightclicked);
+    racontainer.appendChild(raicon);
+    // send to container
+    extcontentbox.appendChild(lacontainer);
     i = 0;
     while(i < 7){
+        current = new Date(daterange.start);
+        current.setDate(current.getDate() + i);
+        datetext = months[current.getMonth()] + " " + current.getDate().toString();
         // create elements
         columncontainer = constructelement("div", "content", "generated-col-" + days[i].toLowerCase());
         headercontainer = constructelement("div", "content-header");
-        headertext = constructp(days[i]);
+        headertext = constructp(days[i]+"   <span class=\"date\">" + datetext + "</span>");
         assignmentcontainer = constructelement("div", "content-container", "content-" + days[i].toLowerCase());
         addbutton = constructelement("div", "add-new-btn", "add-" + days[i].toLowerCase())
         buttonicon = constructelement("i", "fa-regular fa-calendar-plus")
@@ -33,7 +99,7 @@ function buildbody(){
         // build button
         addbutton.appendChild(buttonicon)
         addbutton.appendChild(buttontext)
-        // build columncontainerumn
+        // build column
         columncontainer.appendChild(headercontainer);
         columncontainer.appendChild(assignmentcontainer);
         columncontainer.appendChild(addbutton);
@@ -42,25 +108,51 @@ function buildbody(){
         // iterate
         i++;
     }
+    // send to container
+    extcontentbox.appendChild(racontainer);
     readin("http://localhost:8000/OneDrive/Documents/PlannerApp/assignments.csv");
 }
 
-function addassignment(c, d, dest, index=0){
-    assn = constructelement("div", "assignment")
-    bdy = constructp("<span class =\"class-name\">" + c + "</span> " + d, "", "generated-assignment-" + index)
-    assn.appendChild(bdy);
-    document.querySelector(dest).appendChild(assn);
+function processassignment(c, dsc, d){
+    dd = new Date(d)
+    dd.setSeconds(dd.getSeconds() + 1);
+    const newassignment = {
+        class: c.toUpperCase(),
+        description: dsc,
+        duedate: dd
+    };
+    assignments.push(newassignment);
+}
+
+function displayassignment(a, i){
+    container = constructelement("div", "assignment")
+    body = constructp("<span class =\"class-name\">" + a.class + "</span> " + a.description, "", "generated-assignment-" + i)
+    container.appendChild(body);
+    destination = "#content-" + days[a.duedate.getDay()].toLowerCase();
+    document.querySelector(destination).appendChild(container);
+}
+
+function filterassignments(){
+    i = 0;
+    while(i < assignments.length){
+        assignment = assignments[i];
+        if(assignment.duedate > daterange.start && assignment.duedate < daterange.end){
+            displayassignment(assignment, i);
+        }
+        i++;
+    }
 }
 
 function parse(t){
-    const assignments = t.split("\n")
+    assignments = [];
+    const assns = t.split("\n")
     i = 0
-    while(i < assignments.length-1){
-        const comps = assignments[i].split(",")
-        dest = "#content-"+comps[2].toLowerCase();
-        addassignment(comps[0].toUpperCase(), comps[1], dest, i);
+    while(i < assns.length-1){
+        const comps = assns[i].split(",")
+        processassignment(comps[0], comps[1], comps[2]);
         i++
     }
+    filterassignments();
 }
 
 function readin(path){
@@ -68,11 +160,11 @@ function readin(path){
   .then((res) => res.text())
   .then((text) => {
     parse(text);
-    console.log("read")
    })
   .catch((e) => console.error(e));
 }
 
 window.onload=function(){
+    generatedaterange();
     buildbody();
 }
