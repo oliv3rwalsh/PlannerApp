@@ -174,10 +174,10 @@ function reset(){
     buildbody();
 }
 function openmenu(){
-    document.querySelector("#menu-box").className = "";
+    document.querySelector("#menu-box-container").className = "";
 }
 function close(){
-    document.querySelector("#menu-box").className = "hidden";
+    document.querySelector("#menu-box-container").className = "hidden"
 }
 
 window.onload=function(){
