@@ -86,8 +86,13 @@ function buildbody(){
         current = new Date(daterange.start);
         current.setDate(current.getDate() + i);
         datetext = months[current.getMonth()] + " " + current.getDate().toString();
+        today = new Date()
         // create elements
-        columncontainer = constructelement("div", "content", "generated-col-" + days[i].toLowerCase());
+        if(current.getDate() == today.getDate() && current.getMonth() == today.getMonth()){
+            columncontainer = constructelement("div", "content current", "generated-col-" + days[i].toLowerCase());
+        } else {
+            columncontainer = constructelement("div", "content", "generated-col-" + days[i].toLowerCase());
+        }
         headercontainer = constructelement("div", "content-header");
         headertext = constructp(days[i]+"   <span class=\"date\">" + datetext + "</span>");
         assignmentcontainer = constructelement("div", "content-container", "content-" + days[i].toLowerCase());
@@ -164,7 +169,21 @@ function readin(path){
   .catch((e) => console.error(e));
 }
 
+function reset(){
+    generatedaterange();
+    buildbody();
+}
+function openmenu(){
+    document.querySelector("#menu-box").className = "";
+}
+function close(){
+    document.querySelector("#menu-box").className = "hidden";
+}
+
 window.onload=function(){
     generatedaterange();
     buildbody();
+    document.querySelector("#menu").addEventListener("click", openmenu);
+    document.querySelector("#today-button").addEventListener("click", reset);
+    document.querySelector("#close-button").addEventListener("click", close);
 }
